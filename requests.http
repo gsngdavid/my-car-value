@@ -28,4 +28,4 @@ Content-Type: application/json
 
 
 ### Delete user by id
-DELETE  http://localhost:3000/auth/14
+DELETE  http://localhost:3000/auth/16
