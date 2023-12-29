@@ -48,6 +48,11 @@ export class UsersController {
     }
   }
 
+  @Post('signout')
+  signOut(@Session() session: any) {
+    session.userId = null;
+  }
+
   @Get('whoami')
   async whoAmI(@Session() session: any) {
     console.log('Session: ', session);

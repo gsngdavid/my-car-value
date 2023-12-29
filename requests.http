@@ -20,7 +20,11 @@ Content-Type: application/json
 }
 
 
-### Get logged in user
+### Sign out user
+POST http://localhost:3000/auth/signout
+
+
+### Get signed in user
 GET http://localhost:3000/auth/whoami
 
 
