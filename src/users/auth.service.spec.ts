@@ -30,4 +30,31 @@ describe('AuthService', () => {
   it('can create an instance of auth service', async () => {
     expect(service).toBeDefined();
   });
+
+  describe('signup', () => {
+    it('create user with salted and hashed password', async () => {
+      const user = await service.signup('test@test.com', '123');
+      const [salt, hash] = user.password.split('.');
+
+      expect(user.password).not.toEqual('123');
+      expect(salt).toBeDefined();
+      expect(hash).toBeDefined();
+    });
+
+    it('throws if the email is already in use', (done) => {
+      fakeUsersService.find = () =>
+        Promise.resolve([
+          {
+            id: '1',
+            email: 'test@test.com',
+            password: '123',
+          } as unknown as User,
+        ]);
+
+      service
+        .signup('test@test.com', '123')
+        .then()
+        .catch(() => done());
+    });
+  });
 });
