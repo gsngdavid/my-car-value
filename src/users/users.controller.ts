@@ -8,6 +8,9 @@ import {
   Patch,
   Delete,
   BadRequestException,
+  Session,
+  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
@@ -25,17 +28,35 @@ export class UsersController {
   ) {}
 
   @Post('signup')
-  createUser(@Body() body: CreateUserDto) {
-    return this.authService.signup(body.email, body.password);
+  async signup(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signup(body.email, body.password);
+    session.userId = user.id;
+    return user;
   }
 
   @Post('signin')
-  async signIn(@Body() body: { email: string; password }) {
+  async signIn(
+    @Body() body: { email: string; password: string },
+    @Session() session: any,
+  ) {
     try {
-      return await this.authService.signIn(body.email, body.password);
+      const user = await this.authService.signIn(body.email, body.password);
+      session.userId = user.id;
+      return user;
     } catch (error) {
       throw new BadRequestException('Wrong email or password');
     }
+  }
+
+  @Get('whoami')
+  async whoAmI(@Session() session: any) {
+    console.log('Session: ', session);
+    try {
+      return await this.userService.findOne(session.userId);
+    } catch (error) {
+      if (error instanceof Error) throw new NotFoundException(error.message);
+    }
+    throw new InternalServerErrorException();
   }
 
   @Get(':id')

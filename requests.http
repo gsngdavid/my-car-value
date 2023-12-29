@@ -15,9 +15,13 @@ POST http://localhost:3000/auth/signin
 Content-Type: application/json
 
 {
-    "email": "gsngdaid@gmail.com",
+    "email": "gsngdavid@gmail.com",
     "password": "Test@123"
 }
+
+
+### Get logged in user
+GET http://localhost:3000/auth/whoami
 
 
 ### Get user by id
@@ -38,4 +42,4 @@ Content-Type: application/json
 
 
 ### Delete user by id
-DELETE  http://localhost:3000/auth/16
+DELETE  http://localhost:3000/auth/17
