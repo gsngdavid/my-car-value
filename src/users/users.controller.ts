@@ -11,6 +11,7 @@ import {
   Session,
   NotFoundException,
   InternalServerErrorException,
+  Req,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
@@ -18,6 +19,8 @@ import { UpdateUserDto } from './dtos/Update-user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from './users.entity';
 
 @Controller('auth')
 @Serialize(UserDto)
@@ -54,14 +57,9 @@ export class UsersController {
   }
 
   @Get('whoami')
-  async whoAmI(@Session() session: any) {
-    console.log('Session: ', session);
-    try {
-      return await this.userService.findOne(session.userId);
-    } catch (error) {
-      if (error instanceof Error) throw new NotFoundException(error.message);
-    }
-    throw new InternalServerErrorException();
+  whoAmI(@CurrentUser() user: User) {
+    if (!user) throw new NotFoundException('No user found');
+    return user;
   }
 
   @Get(':id')
