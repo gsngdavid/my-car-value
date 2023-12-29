@@ -57,4 +57,29 @@ describe('AuthService', () => {
         .catch(() => done());
     });
   });
+
+  describe('signIn', () => {
+    it('throws if the user is not found', (done) => {
+      service
+        .signIn('test@test.com', '123')
+        .then()
+        .catch(() => done());
+    });
+
+    it('throws if incorrect password is provided', (done) => {
+      fakeUsersService.find = () =>
+        Promise.resolve([
+          {
+            id: '1',
+            email: 'test@test.com',
+            password: 'dlkjfjgkl',
+          } as unknown as User,
+        ]);
+
+      service
+        .signIn('test@test.com', '123')
+        .then()
+        .catch(() => done());
+    });
+  });
 });
