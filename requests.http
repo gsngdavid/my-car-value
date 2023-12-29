@@ -5,8 +5,18 @@ Content-Type: application/json
 
 {
     "email": "gsngdavid@gmail.com",
-    "password": "Test@123",
-    "admin": true
+    "password": "Test@123"
+}
+
+
+### Sing in the user
+
+POST http://localhost:3000/auth/signin
+Content-Type: application/json
+
+{
+    "email": "gsngdaid@gmail.com",
+    "password": "Test@123"
 }
 
 

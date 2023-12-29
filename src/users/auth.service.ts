@@ -19,4 +19,17 @@ export class AuthService {
 
     return this.usersService.create(email, formattedHash);
   }
+
+  async signIn(email: string, password: string) {
+    const [user] = await this.usersService.find(email);
+    if (!user) throw new Error('Wrong email or password');
+
+    const [salt, storedHash] = user.password.split('.');
+    const hash = (await scrypt(password, salt, 32)) as Buffer;
+
+    if (hash.toString('hex') !== storedHash)
+      throw new Error('Wrong email or password');
+
+    return user;
+  }
 }

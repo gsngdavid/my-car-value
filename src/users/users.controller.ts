@@ -7,6 +7,7 @@ import {
   Query,
   Patch,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
@@ -26,6 +27,15 @@ export class UsersController {
   @Post('signup')
   createUser(@Body() body: CreateUserDto) {
     return this.authService.signup(body.email, body.password);
+  }
+
+  @Post('signin')
+  async signIn(@Body() body: { email: string; password }) {
+    try {
+      return await this.authService.signIn(body.email, body.password);
+    } catch (error) {
+      throw new BadRequestException('Wrong email or password');
+    }
   }
 
   @Get(':id')
