@@ -6,12 +6,19 @@ import { User } from './users.entity';
 describe('AuthService', () => {
   let service: AuthService;
   let fakeUsersService: Partial<UsersService>;
+  const users: User[] = [];
 
   beforeEach(async () => {
     fakeUsersService = {
-      find: () => Promise.resolve([]),
-      create: (email: string, password: string) =>
-        Promise.resolve({ id: 1, email, password } as unknown as User),
+      find: (email: string) => {
+        const filteredUsers = users.filter((user) => user.email === email);
+        return Promise.resolve(filteredUsers);
+      },
+      create: (email: string, password: string) => {
+        const user = { id: new Date().toISOString(), email, password } as User;
+        users.push(user);
+        return Promise.resolve(user);
+      },
     };
 
     const module = await Test.createTestingModule({
@@ -33,7 +40,7 @@ describe('AuthService', () => {
 
   describe('signup', () => {
     it('create user with salted and hashed password', async () => {
-      const user = await service.signup('test@test.com', '123');
+      const user = await service.signup('signup@test.com', '123');
       const [salt, hash] = user.password.split('.');
 
       expect(user.password).not.toEqual('123');
@@ -42,44 +49,39 @@ describe('AuthService', () => {
     });
 
     it('throws if the email is already in use', (done) => {
-      fakeUsersService.find = () =>
-        Promise.resolve([
-          {
-            id: '1',
-            email: 'test@test.com',
-            password: '123',
-          } as unknown as User,
-        ]);
-
-      service
-        .signup('test@test.com', '123')
-        .then()
-        .catch(() => done());
+      // This should work fine for the first time signing up with signup2@test.com
+      service.signup('signup2@test.com', '123').then(() => {
+        // This should throw since the email is now already in use
+        service
+          .signup('signup2@test.com', '123')
+          .then()
+          .catch(() => done());
+      });
     });
   });
 
   describe('signIn', () => {
     it('throws if the user is not found', (done) => {
       service
-        .signIn('test@test.com', '123')
-        .then()
+        .signIn('404@test.com', '123')
+        .then((user) => console.log(user))
         .catch(() => done());
     });
 
     it('throws if incorrect password is provided', (done) => {
-      fakeUsersService.find = () =>
-        Promise.resolve([
-          {
-            id: '1',
-            email: 'test@test.com',
-            password: 'dlkjfjgkl',
-          } as unknown as User,
-        ]);
+      service.signup('incorrectPassword@test.com', '123').then(() => {
+        service
+          .signIn('incorrectPassword@test.com', '12345')
+          .then()
+          .catch(() => done());
+      });
+    });
 
-      service
-        .signIn('test@test.com', '123')
-        .then()
-        .catch(() => done());
+    it('should return a user if a correct password is provided', async () => {
+      await service.signup('correctPassword@test.com', '123');
+
+      const user = await service.signIn('correctPassword@test.com', '123');
+      expect(user).toBeDefined();
     });
   });
 });
