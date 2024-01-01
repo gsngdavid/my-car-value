@@ -1,5 +1,6 @@
 .env
 .env.*
+*.sqlite
 
 # compiled output
 /dist
