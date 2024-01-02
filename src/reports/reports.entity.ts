@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  AfterInsert,
+  AfterUpdate,
+  AfterLoad,
+  AfterRemove,
+} from 'typeorm';
 
 @Entity()
 export class Report {
@@ -22,4 +30,24 @@ export class Report {
 
   @Column()
   latitude: number;
+
+  @AfterInsert()
+  logInsert() {
+    console.log('Inserted report with id: ', this.id);
+  }
+
+  @AfterLoad()
+  logLoad() {
+    console.log('Loaded report with id: ', this.id);
+  }
+
+  @AfterUpdate()
+  logUpdate() {
+    console.log('Updated report with id: ', this.id);
+  }
+
+  @AfterRemove()
+  logRemove() {
+    console.log('Removed report with id: ', this.id);
+  }
 }

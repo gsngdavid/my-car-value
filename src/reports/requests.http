@@ -1,0 +1,14 @@
+### Create a report
+
+POST http://localhost:3000/reports
+Content-Type: application/json
+
+{
+    "make": "Toyota",
+    "model": "Mustang",
+    "year": 2015,
+    "mileage": 2100,
+    "longitude": 1.9403,
+    "latitude": 29.8739,
+    "price": 2300
+}
