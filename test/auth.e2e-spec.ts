@@ -29,4 +29,20 @@ describe('Authentication system', () => {
         expect(email).toEqual(credentials.email);
       });
   });
+
+  it('should return the user signed in', async () => {
+    const credentials = { email: 'test@test.com', password: 'Test@123' };
+    const httpServer = app.getHttpServer();
+    const res = await request(httpServer)
+      .post('/auth/signup')
+      .send(credentials);
+    const cookie = res.get('Set-Cookie');
+
+    const { body } = await request(httpServer)
+      .get('/auth/whoami')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body.email).toEqual(credentials.email);
+  });
 });
