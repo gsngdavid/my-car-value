@@ -1,3 +1,4 @@
+import { User } from 'src/users/users.entity';
 import {
   Entity,
   Column,
@@ -6,6 +7,7 @@ import {
   AfterUpdate,
   AfterLoad,
   AfterRemove,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity()
@@ -31,6 +33,12 @@ export class Report {
   @Column()
   latitude: number;
 
+  // ================= Relationships =================
+
+  @ManyToOne(() => User, (user) => user.reports)
+  user: User;
+
+  // ================= Hooks =================
   @AfterInsert()
   logInsert() {
     console.log('Inserted report with id: ', this.id);

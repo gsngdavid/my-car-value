@@ -1,3 +1,4 @@
+import { Report } from 'src/reports/reports.entity';
 import {
   Entity,
   Column,
@@ -5,6 +6,7 @@ import {
   AfterInsert,
   AfterUpdate,
   BeforeRemove,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -17,6 +19,13 @@ export class User {
 
   @Column()
   password: string;
+
+  // =============== Relationships ================
+
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Report[];
+
+  // ================== Hooks =======================
 
   @AfterInsert()
   logInsert() {
