@@ -14,6 +14,7 @@ import { User } from 'src/users/users.entity';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { ReportDto } from './dtos/report.dto';
 import { ApproveReportDto } from './dtos/approve-report.dto';
+import { AdminGuard } from 'src/guards/admin.guard';
 
 @UseGuards(AuthGuard)
 @Serialize(ReportDto)
@@ -26,6 +27,7 @@ export class ReportsController {
     return this.reportService.create(body, user);
   }
 
+  @UseGuards(AdminGuard)
   @Patch(':id')
   approve(@Param('id') id: number, @Body() body: ApproveReportDto) {
     return this.reportService.approve(id, body.approved);
