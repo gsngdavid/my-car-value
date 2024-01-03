@@ -33,6 +33,9 @@ export class Report {
   @Column()
   latitude: number;
 
+  @Column({ default: false })
+  approved: boolean;
+
   // ================= Relationships =================
 
   @ManyToOne(() => User, (user) => user.reports)

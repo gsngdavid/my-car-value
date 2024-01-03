@@ -12,3 +12,13 @@ Content-Type: application/json
     "latitude": 29.8739,
     "price": 2300
 }
+
+
+### Update report's staus
+
+PATCH http://localhost:3000/reports/9
+Content-Type: application/json
+
+{
+    "approved": true
+}
