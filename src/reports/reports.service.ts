@@ -33,7 +33,8 @@ export class ReportsService {
       .createQueryBuilder('report')
       .select('AVG(price)', 'price')
       .leftJoinAndSelect('report.user', 'user')
-      .where('report.make = :make', { make: query.make })
+      .where('approved IS TRUE')
+      .andWhere('report.make = :make', { make: query.make })
       .andWhere('report.model = :model', { model: query.model })
       .andWhere('longitude - :longitude BETWEEN -5 AND 5', {
         longitude: query.longitude,
