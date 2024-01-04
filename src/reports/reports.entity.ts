@@ -33,6 +33,9 @@ export class Report {
   @Column()
   latitude: number;
 
+  @Column()
+  price: number;
+
   @Column({ default: false })
   approved: boolean;
 

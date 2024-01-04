@@ -4,13 +4,13 @@ POST http://localhost:3000/reports
 Content-Type: application/json
 
 {
-    "make": "Toyota",
+    "make": "Ford",
     "model": "Mustang",
-    "year": 2015,
+    "year": 2004,
     "mileage": 2100,
     "longitude": 1.9403,
     "latitude": 29.8739,
-    "price": 2300
+    "price": 100
 }
 
 
@@ -22,3 +22,8 @@ Content-Type: application/json
 {
     "approved": true
 }
+
+
+### Get estimated price for the cars
+
+GET http://localhost:3000/reports?make=Ford&model=Mustang&year=2013&mileage=1000&longitude=0&latitude=27
