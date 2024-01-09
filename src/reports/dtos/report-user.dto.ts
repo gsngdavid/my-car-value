@@ -1,5 +1,5 @@
 import { Expose, Transform } from 'class-transformer';
-import { User } from 'src/users/users.entity';
+import { User } from '../../users/users.entity';
 
 export class ReportUserDto {
   @Expose()
